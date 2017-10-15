@@ -43,15 +43,15 @@ def histogram(data, num_bins): # even check of sigma wel s is
     # example data
     x = sample
 
-    # the histogram of the data
+    # Histogram of the data
     n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor='pink', alpha=0.5, ec='black', label='Sample')
-    # add a 'best fit' line
+    # Creates a best fit line
     y = mlab.normpdf(bins, x_bar, s)
     plt.plot(bins, y, 'r--', color="#ff0000", label=r'$\mathrm{}\ \mu=%.2E,\ \sigma=%.2E$'% (x_bar, s))
     plt.xlabel('x')
     plt.ylabel('Probability')
 
-    # Tweak spacing to prevent clipping of ylabel
+    # Puts the legend in the best location
     plt.subplots_adjust(left=0.15)
     plt.legend(loc='best')
     plt.show()
