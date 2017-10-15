@@ -11,7 +11,7 @@ from scipy.stats import norm
 -----START OF USER VARIABLES-----
 """
 
-df = pd.read_csv('q_berekend'\
+df = pd.read_csv('millikan'\
                  , sep='\t', header=1, names=['U', 'delta U', 'x begin', 'x eind', 't',
                                               'mgd', 'delta mgd', 'q'],
                  decimal=".")
@@ -148,5 +148,5 @@ t_test(sample, mu)
 
 """
 TODO:
-chee test bij lin regressie toevoegen
+Add a chee for the linear regression plot
 """
