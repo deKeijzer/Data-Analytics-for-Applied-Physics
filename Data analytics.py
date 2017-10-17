@@ -11,7 +11,7 @@ from scipy.stats import norm
 -----START OF USER VARIABLES-----
 """
 
-df = pd.read_csv('millikan'\
+df = pd.read_csv('millikan measurements'\
                  , sep='\t', header=1, names=['U', 'delta U', 'x begin', 'x eind', 't',
                                               'mgd', 'delta mgd', 'q'],
                  decimal=".")
@@ -49,7 +49,7 @@ def histogram(data, num_bins): # even check of sigma wel s is
     y = mlab.normpdf(bins, x_bar, s)
     plt.plot(bins, y, 'r--', color="#ff0000", label=r'$\mathrm{}\ \mu=%.2E,\ \sigma=%.2E$'% (x_bar, s))
     plt.xlabel('x')
-    plt.ylabel('Probability')
+    plt.ylabel('y')
 
     # Puts the legend in the best location
     plt.subplots_adjust(left=0.15)
@@ -144,7 +144,7 @@ t_test(sample, mu)
 #print(stats.norm.ppf(1.96))
 #histogram(sample, 20)
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-#linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
+linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 
 """
 TODO:
