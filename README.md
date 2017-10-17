@@ -8,5 +8,5 @@ Currently supported:
 - Basic calculations like: mean value, sample standard deviation and mode.
 
 This project makes use of the following repositories & packages:
-https://github.com/ddland/TIS-TN-python-code
-- scipy / Anaconda
+- https://github.com/ddland/TIS-TN-python-code
+- SciPy / Anaconda
