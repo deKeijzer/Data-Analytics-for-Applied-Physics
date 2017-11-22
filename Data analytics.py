@@ -11,7 +11,7 @@ from matplotlib import rc
 """
 Start of dataframe settings
 """
-df_live = pd.read_csv('data\MuonLab\life time.txt'\
+df_live = pd.read_csv('data\MuonLab\lifetime_raw.txt'\
                  , sep='\t', header=1, names=['time', 'counts'],
                  decimal=".")
 df_edited = pd.DataFrame()
@@ -51,12 +51,19 @@ y_label = 'Count (-)'
 x_label = 'Lifetime (s)'
 
 # Edit the df_live to df_edited using data_hist_to_raw()
-data_hist_to_raw()
+#ata_hist_to_raw()
 
 df = df_live  # Specify which dataframe to use for calculations & plots
 
+# Significance corrections
+#df['time'] = df['time']*10E-6
+
+# Remove 0's from df because those arn't measures values from MuonLabIII
+df = df[~(df == 0).any(axis=1)] # Verpest de fit
+print(df['time'])
+
 sample = df['time']  # The sample to do statistical analysis on
-mu = 2.19704E-6  # literature value to compare the sample to
+mu = 2.19704  # literature value to compare the sample to
 x_significant_digits = 3  # Number of significant digits used in plots
 y_significant_digits = 3  # Number of significant digits used in plots
 
@@ -203,15 +210,15 @@ def linear_regression_plot(x, x_error, y, y_error):
     create_layout()
     plt.show()
 
-def exponential_fit(x, a, c):
+def exponential_fit(x, a, b, c):
     """
-    Logarithmic fit used for the MuonLab life time measurements.
+    Logarithmic fit
     :param x:
     :param a:
     :param c:
     :return:
     """
-    return (1/a)*np.exp(-x/a)+c
+    return (1/a)*np.exp(-x/b)+c
 
 def logarithmic_fit_plot(x, y): # WIP
     font = {'family': 'normal',
@@ -223,10 +230,12 @@ def logarithmic_fit_plot(x, y): # WIP
     ydata = y
     plt.rc('text', usetex=True)
     plt.plot(xdata, ydata, '.', label='sample')
-    popt, pcov = sp.optimize.curve_fit(exponential_fit, xdata, ydata)
+    popt, pcov = sp.optimize.curve_fit(exponential_fit, xdata, ydata, bounds=(0, [3., 3., 3]))
     plt.plot(xdata, exponential_fit(xdata, *popt), 'r-',
-             label=r"$\frac{1}{\tau_0}e^{\frac{-x}{\tau_0}}, \tau_0=%5.3f, c=%5.3f$" % tuple(popt))
+             #label=r"$\frac{1}{\tau_0}e^{\frac{-x}{\tau_0}}, \tau_0=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
+             label=r"$\frac{1}{a}e^{\frac{-x}{b}}+c, a=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
     plt.legend()
+    create_layout()
     plt.show()
 
 def df_to_csv(file_name):
