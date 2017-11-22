@@ -6,6 +6,7 @@ import TISTNplot as tn
 from pylab import *
 import scipy as sp
 from scipy.stats import norm
+from matplotlib import rc
 
 """
 Start of dataframe settings
@@ -68,7 +69,11 @@ s = np.std(sample) #sigma, sample standard deviation
 delta_x = s/(len(sample))**(1/2) #d
 mode = sp.stats.mode(sample, axis=None)
 
-
+# Code needed to use LaTeX in plots
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+## for Palatino and other serif fonts use:
+#rc('font',**{'family':'serif','serif':['Palatino']})
+rc('text', usetex=True)
 
 
 def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim): # even check of sigma wel s is
@@ -198,20 +203,34 @@ def linear_regression_plot(x, x_error, y, y_error):
     create_layout()
     plt.show()
 
-def logarithmic_fit_plot(x, y): # WIP
-    font = {'family': 'serif',
-            'color': 'darkred',
-            'weight': 'normal',
-            'size': 14,
-            }
+def exponential_fit(x, a, c):
+    """
+    Logarithmic fit used for the MuonLab life time measurements.
+    :param x:
+    :param a:
+    :param c:
+    :return:
+    """
+    return (1/a)*np.exp(-x/a)+c
 
-    a, b = polyfit(x, np.log(y), 1)
-    plt.plot(x, a * x + b, '--k', label=r'$\mathrm{y=%.2Ex+%.2E}\ $'% (a, b))  # Plots the fitted line
-    plt.errorbar(x, y, capsize=1, fmt='.', color='#0000ff', ms=10)  # Plots the data points
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    create_layout()
+def logarithmic_fit_plot(x, y): # WIP
+    font = {'family': 'normal',
+            'weight': 'bold',
+            'size': 14}
+
+    matplotlib.rc('font', **font)
+    xdata = x
+    ydata = y
+    plt.rc('text', usetex=True)
+    plt.plot(xdata, ydata, '.', label='sample')
+    popt, pcov = sp.optimize.curve_fit(exponential_fit, xdata, ydata)
+    plt.plot(xdata, exponential_fit(xdata, *popt), 'r-',
+             label=r"$\frac{1}{\tau_0}e^{\frac{-x}{\tau_0}}, \tau_0=%5.3f, c=%5.3f$" % tuple(popt))
+    plt.legend()
     plt.show()
+
+def df_to_csv(file_name):
+    df.to_csv(file_name, sep='\t')
 
 print('x_bar: %s'% x_bar)
 print('s: %s'% s)
@@ -222,9 +241,11 @@ t_test(sample, mu)
 #print(stats.norm.ppf(1.96))
 #histogram(sample, 25, False, False, [0, 1], [0,25]) # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-create_plot_without_error(df['time'], df['counts'])
+#create_plot_without_error(df['time'], df['counts'])
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #logarithmic_fit_plot(df['time'], df['counts'])
+#df_to_csv('raw.scv') #saves df to scv file 'file name'
+logarithmic_fit_plot(df['time'], df['counts'])
 
 """
 TODO:
