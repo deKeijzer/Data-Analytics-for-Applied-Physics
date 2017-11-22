@@ -7,16 +7,50 @@ from pylab import *
 from scipy import stats
 from scipy.stats import norm
 
+df_edited = pd.DataFrame()
+
+def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
+    """
+    Converts histogram data to raw data.
+    The required data format is ['x value', 'counts']
+    :param time:
+    :param counts:
+    :return:
+    """
+    a = 'time'
+    b = 'counts'
+
+    df_copy = df.copy()
+    #print(df_copy.loc[[0]])
+    #print(list(df_copy))
+    time = []
+    index = []
+    for i in range(len(df_copy)):
+        val = df_copy.ix[i][a]
+        for j in range(0, int(abs(df_copy.ix[i][b]))):
+            time.append(val)
+    for k in range(len(time)):
+        index.append(k+1)
+    df_edited['time'] = time
+    df_edited['index'] = index
+
+
 """
 -----START OF USER VARIABLES-----
 """
 
-df = pd.read_csv('millikan measurements'\
-                 , sep='\t', header=1, names=['U', 'delta U', 'x begin', 'x eind', 't',
-                                              'mgd', 'delta mgd', 'q'],
+df_live = pd.read_csv('data\MuonLab\life time.txt'\
+                 , sep='\t', header=1, names=['time', 'counts'],
                  decimal=".")
 
-sample = df['q']  # The sample to do statistical analysis on
+df = df_live  # Set the dataframe to use for the calculations & plots
+
+# Edit the df_live pandas
+data_hist_to_raw()
+
+lengte = len(df_edited['time'])
+
+sample = df['time']  # The sample to do statistical analysis on
 mu = 1.6E-19  # literature value to compare the sample to
 x_significant_digits = 3  # Number of significant digits used in plots
 y_significant_digits = 3  # Number of significant digits used in plots
@@ -27,8 +61,10 @@ y_significant_digits = 3  # Number of significant digits used in plots
 
 x_bar = np.mean(sample) #x bar, sample average
 s = np.std(sample) #sigma, sample standard deviation
-delta_x = s/(len(sample))**(1/2) #d
+delta_x = s/(lengte)**(1/2) #d
 mode = stats.mode(sample, axis=None)
+
+
 
 
 def histogram(data, num_bins): # even check of sigma wel s is
@@ -142,9 +178,9 @@ t_test(sample, mu)
 
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
-#histogram(sample, 20)
+histogram(sample, 50)
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
+#linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 
 """
 TODO:
