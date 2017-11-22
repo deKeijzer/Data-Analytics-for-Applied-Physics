@@ -7,7 +7,16 @@ from pylab import *
 from scipy import stats
 from scipy.stats import norm
 
+"""
+Start of dataframe settings
+"""
+df_live = pd.read_csv('data\MuonLab\life time.txt'\
+                 , sep='\t', header=1, names=['time', 'counts'],
+                 decimal=".")
 df_edited = pd.DataFrame()
+"""
+End of dataframe settings
+"""
 
 def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
     """
@@ -20,9 +29,7 @@ def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
     a = 'time'
     b = 'counts'
 
-    df_copy = df.copy()
-    #print(df_copy.loc[[0]])
-    #print(list(df_copy))
+    df_copy = df_live.copy()
     time = []
     index = []
     for i in range(len(df_copy)):
@@ -31,27 +38,24 @@ def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
             time.append(val)
     for k in range(len(time)):
         index.append(k+1)
-    df_edited['time'] = time
+    df_edited['time'] = time  # Creates ['time'] column containing the time array data
     df_edited['index'] = index
 
 
 """
 -----START OF USER VARIABLES-----
 """
+# Label data
+y_label = 'Count (-)'
+x_label = 'Lifetime (s)'
 
-df_live = pd.read_csv('data\MuonLab\life time.txt'\
-                 , sep='\t', header=1, names=['time', 'counts'],
-                 decimal=".")
-
-df = df_live  # Set the dataframe to use for the calculations & plots
-
-# Edit the df_live pandas
+# Edit the df_live to df_edited using data_hist_to_raw()
 data_hist_to_raw()
 
-lengte = len(df_edited['time'])
+df = df_edited  # Specify which dataframe to use for calculations & plots
 
 sample = df['time']  # The sample to do statistical analysis on
-mu = 1.6E-19  # literature value to compare the sample to
+mu = 2.19704E-6  # literature value to compare the sample to
 x_significant_digits = 3  # Number of significant digits used in plots
 y_significant_digits = 3  # Number of significant digits used in plots
 
@@ -61,13 +65,13 @@ y_significant_digits = 3  # Number of significant digits used in plots
 
 x_bar = np.mean(sample) #x bar, sample average
 s = np.std(sample) #sigma, sample standard deviation
-delta_x = s/(lengte)**(1/2) #d
+delta_x = s/(len(sample))**(1/2) #d
 mode = stats.mode(sample, axis=None)
 
 
 
 
-def histogram(data, num_bins): # even check of sigma wel s is
+def histogram(data, num_bins, enable_axis_lim, x_lim, y_lim): # even check of sigma wel s is
     """
     Plots a histogram with number_of_bins of given data.
     :param data:
@@ -76,6 +80,12 @@ def histogram(data, num_bins): # even check of sigma wel s is
     """
     #number_of_bins = 2*st.iqr(data)/(len(data)**(1/3)) # Freedman–Diaconis rule, werkt niet bij lage getallen
     fig = plt.figure()
+
+    if enable_axis_lim == True:
+        axes = plt.gca()
+        axes.set_xlim(x_lim)
+        axes.set_ylim(y_lim)
+
     # example data
     x = sample
 
@@ -84,8 +94,8 @@ def histogram(data, num_bins): # even check of sigma wel s is
     # Creates a best fit line
     y = mlab.normpdf(bins, x_bar, s)
     plt.plot(bins, y, 'r--', color="#ff0000", label=r'$\mathrm{}\ \mu=%.2E,\ \sigma=%.2E$'% (x_bar, s))
-    plt.xlabel('x')
-    plt.ylabel('y')
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
 
     # Puts the legend in the best location
     plt.subplots_adjust(left=0.15)
@@ -134,15 +144,15 @@ def create_layout():
 def create_plot(x, x_error, y1, y1_error):
     """
     Creates a plot of the data.
-    data must be in df['...'] format.
+    Data must be in df['...'] format.
     :param x:
     :param y:
     :return:
     """
     plt.errorbar(x, y1, yerr=y1_error, xerr=x_error, capsize=5, fmt='.', color="#0000ff", ms=5)
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
-    plt.xlabel('x')
-    plt.ylabel('y')
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     create_layout()
     plt.show()
 
@@ -165,8 +175,8 @@ def linear_regression_plot(x, x_error, y, y_error):
     a, b = polyfit(x, y, 1)
     plt.plot(x, a * x + b, '--k', label=r'$\mathrm{y=%.2Ex+%.2E}\ $'% (a, b))  # Plots the fitted line
     plt.errorbar(x, y, yerr=y_error, xerr=x_error, capsize=5, fmt='.', color='#0000ff', ms=10)  # Plots the data points
-    plt.xlabel('x')
-    plt.ylabel('y')
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
     create_layout()
     plt.show()
 
@@ -178,7 +188,7 @@ t_test(sample, mu)
 
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
-histogram(sample, 50)
+histogram(sample, 500, True, [0, 1], [0,25]) # data, number of bars, Enable_axis_lim, x_lim, y_lim
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 
