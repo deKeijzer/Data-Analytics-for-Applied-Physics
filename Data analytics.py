@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import TISTNplot as tn
 from pylab import *
-from scipy import stats
+import scipy as sp
 from scipy.stats import norm
 
 """
@@ -52,7 +52,7 @@ x_label = 'Lifetime (s)'
 # Edit the df_live to df_edited using data_hist_to_raw()
 data_hist_to_raw()
 
-df = df_edited  # Specify which dataframe to use for calculations & plots
+df = df_live  # Specify which dataframe to use for calculations & plots
 
 sample = df['time']  # The sample to do statistical analysis on
 mu = 2.19704E-6  # literature value to compare the sample to
@@ -66,12 +66,12 @@ y_significant_digits = 3  # Number of significant digits used in plots
 x_bar = np.mean(sample) #x bar, sample average
 s = np.std(sample) #sigma, sample standard deviation
 delta_x = s/(len(sample))**(1/2) #d
-mode = stats.mode(sample, axis=None)
+mode = sp.stats.mode(sample, axis=None)
 
 
 
 
-def histogram(data, num_bins, enable_axis_lim, x_lim, y_lim): # even check of sigma wel s is
+def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim): # even check of sigma wel s is
     """
     Plots a histogram with number_of_bins of given data.
     :param data:
@@ -81,7 +81,7 @@ def histogram(data, num_bins, enable_axis_lim, x_lim, y_lim): # even check of si
     #number_of_bins = 2*st.iqr(data)/(len(data)**(1/3)) # Freedman–Diaconis rule, werkt niet bij lage getallen
     fig = plt.figure()
 
-    if enable_axis_lim == True:
+    if enable_axis_lim:
         axes = plt.gca()
         axes.set_xlim(x_lim)
         axes.set_ylim(y_lim)
@@ -91,9 +91,12 @@ def histogram(data, num_bins, enable_axis_lim, x_lim, y_lim): # even check of si
 
     # Histogram of the data
     n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor='pink', alpha=0.5, ec='black', label='Sample')
-    # Creates a best fit line
-    y = mlab.normpdf(bins, x_bar, s)
-    plt.plot(bins, y, 'r--', color="#ff0000", label=r'$\mathrm{}\ \mu=%.2E,\ \sigma=%.2E$'% (x_bar, s))
+
+    # Creates a best gauss fit line
+    if enable_gauss_fit:
+        y = mlab.normpdf(bins, x_bar, s)
+        plt.plot(bins, y, 'r--', color="#ff0000", label=r'$\mathrm{}\ \mu=%.2E,\ \sigma=%.2E$'% (x_bar, s))
+
     plt.xlabel(x_label)
     plt.ylabel(y_label)
 
@@ -113,7 +116,7 @@ def t_test(sample, mu):
     :param mu:
     :return:
     """
-    ttest = stats.ttest_1samp(sample, mu)
+    ttest = sp.stats.ttest_1samp(sample, mu)
     t = ttest[0]
     p = ttest[1]
     p_percent = p*100
@@ -156,6 +159,21 @@ def create_plot(x, x_error, y1, y1_error):
     create_layout()
     plt.show()
 
+def create_plot_without_error(x, y1):
+    """
+    Creates a plot of the data.
+    Data must be in df['...'] format.
+    :param x:
+    :param y:
+    :return:
+    """
+    plt.errorbar(x, y1, capsize=5, fmt='.', color="#0000ff", ms=5)
+    #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    create_layout()
+    plt.show()
+
 
 def linear_regression_plot(x, x_error, y, y_error):
     """
@@ -180,6 +198,20 @@ def linear_regression_plot(x, x_error, y, y_error):
     create_layout()
     plt.show()
 
+def logarithmic_fit_plot(x, y): # WIP
+    font = {'family': 'serif',
+            'color': 'darkred',
+            'weight': 'normal',
+            'size': 14,
+            }
+
+    a, b = polyfit(x, np.log(y), 1)
+    plt.plot(x, a * x + b, '--k', label=r'$\mathrm{y=%.2Ex+%.2E}\ $'% (a, b))  # Plots the fitted line
+    plt.errorbar(x, y, capsize=1, fmt='.', color='#0000ff', ms=10)  # Plots the data points
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    create_layout()
+    plt.show()
 
 print('x_bar: %s'% x_bar)
 print('s: %s'% s)
@@ -188,9 +220,11 @@ t_test(sample, mu)
 
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
-histogram(sample, 500, True, [0, 1], [0,25]) # data, number of bars, Enable_axis_lim, x_lim, y_lim
+#histogram(sample, 25, False, False, [0, 1], [0,25]) # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
+create_plot_without_error(df['time'], df['counts'])
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
+#logarithmic_fit_plot(df['time'], df['counts'])
 
 """
 TODO:
