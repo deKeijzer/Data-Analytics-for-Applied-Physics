@@ -11,8 +11,8 @@ from matplotlib import rc
 """
 Start of dataframe settings
 """
-df_live = pd.read_csv('data\MuonLab\lifetime_raw.txt'\
-                 , sep='\t', header=1, names=['time', 'counts'],
+df_live = pd.read_csv('data\Acc meter\meting 8.csv'
+                 , sep=',', header=1, names=['x', 'y', 'z'],
                  decimal=".")
 df_edited = pd.DataFrame()
 """
@@ -43,27 +43,40 @@ def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
     df_edited['index'] = index
 
 
+def add_index_to_time(sample_rate):
+    """
+    Adds a time dataframe to the sample df when the sample rate (Hz) is known.
+    :return:
+    """
+    time = []
+    for i in range(len(df)):
+        time.append(i/sample_rate)
+    return time
+
+
 """
 -----START OF USER VARIABLES-----
 """
 # Label data
-y_label = 'Count (-)'
-x_label = 'Lifetime (s)'
+y_label = 'Versnelling'
+x_label = 'Tijd (s)'
 
 # Edit the df_live to df_edited using data_hist_to_raw()
-#ata_hist_to_raw()
+# data_hist_to_raw()
+
 
 df = df_live  # Specify which dataframe to use for calculations & plots
 
-# Significance corrections
-#df['time'] = df['time']*10E-6
+
+#df['time'] = df['time']*10E-6  # Significance corrections
+df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
 
 # Remove 0's from df because those arn't measures values from MuonLabIII
-df = df[~(df == 0).any(axis=1)] # Verpest de fit
-print(df['time'])
+# df = df[~(df == 0).any(axis=1)] # Verpest de fit
+# print(df['time'])
 
 sample = df['time']  # The sample to do statistical analysis on
-mu = 2.19704  # literature value to compare the sample to
+mu = 6  # literature value to compare the sample to
 x_significant_digits = 3  # Number of significant digits used in plots
 y_significant_digits = 3  # Number of significant digits used in plots
 
@@ -250,11 +263,11 @@ t_test(sample, mu)
 #print(stats.norm.ppf(1.96))
 #histogram(sample, 25, False, False, [0, 1], [0,25]) # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-#create_plot_without_error(df['time'], df['counts'])
+create_plot_without_error(df['time'], df['z'])
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #logarithmic_fit_plot(df['time'], df['counts'])
 #df_to_csv('raw.scv') #saves df to scv file 'file name'
-logarithmic_fit_plot(df['time'], df['counts'])
+#logarithmic_fit_plot(df['time'], df['counts'])
 
 """
 TODO:
