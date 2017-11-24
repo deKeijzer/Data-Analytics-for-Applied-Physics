@@ -11,13 +11,13 @@ from matplotlib import rc
 """
 Start of dataframe settings
 """
-df_live = pd.read_csv('data\Acc meter\meting 8.csv'
-                 , sep=',', header=1, names=['x', 'y', 'z'],
-                 decimal=".")
+df_live = pd.read_csv('Data\\Accelerometer (ACC)\\acc_15.csv',
+                      sep=',', header=1, names=['x', 'y', 'z'], decimal=".")
 df_edited = pd.DataFrame()
 """
 End of dataframe settings
 """
+
 
 def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
     """
@@ -65,6 +65,7 @@ x_label = 'Tijd (s)'
 # data_hist_to_raw()
 
 
+global df
 df = df_live  # Specify which dataframe to use for calculations & plots
 
 
@@ -128,7 +129,6 @@ def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim): 
     # Puts the legend in the best location
     plt.subplots_adjust(left=0.15)
     plt.legend(loc='best')
-    plt.show()
 
 
 def t_test(sample, mu):
@@ -157,6 +157,7 @@ def t_test(sample, mu):
 
     return print(result)
 
+
 def create_layout():
     """
     Creates the plot layout as set by certain TIS-TN standards.
@@ -182,9 +183,9 @@ def create_plot(x, x_error, y1, y1_error):
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     create_layout()
-    plt.show()
 
-def create_plot_without_error(x, y1):
+
+def create_plot_without_error(x, y, label):
     """
     Creates a plot of the data.
     Data must be in df['...'] format.
@@ -192,12 +193,11 @@ def create_plot_without_error(x, y1):
     :param y:
     :return:
     """
-    plt.errorbar(x, y1, capsize=5, fmt='.', color="#0000ff", ms=5)
+    plt.plot(x, y, '.', color="#ff0000", ms=5, label=r''+label+'')
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     create_layout()
-    plt.show()
 
 
 def linear_regression_plot(x, x_error, y, y_error):
@@ -221,7 +221,7 @@ def linear_regression_plot(x, x_error, y, y_error):
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     create_layout()
-    plt.show()
+
 
 def exponential_fit(x, a, b, c):
     """
@@ -232,6 +232,7 @@ def exponential_fit(x, a, b, c):
     :return:
     """
     return (1/a)*np.exp(-x/b)+c
+
 
 def logarithmic_fit_plot(x, y): # WIP
     font = {'family': 'normal',
@@ -249,10 +250,34 @@ def logarithmic_fit_plot(x, y): # WIP
              label=r"$\frac{1}{a}e^{\frac{-x}{b}}+c, a=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
     plt.legend()
     create_layout()
-    plt.show()
+
 
 def df_to_csv(file_name):
     df.to_csv(file_name, sep='\t')
+
+
+def save_multiple_plots(directory, file_name, file_format, start, stop):
+    """
+    Saves plots from multiple samples.
+    Note that the function to use with its variables is set inside this function.
+    For
+    :param function:
+    :param directory:
+    :param file_name:
+    :param file_format:
+    :param range:
+    :return:
+    """
+    global df
+    for i in range(start, stop):
+        df = pd.read_csv(str(directory)+str(file_name)+str(i)+str(file_format)
+                 , sep=',', header=None, names=['x', 'y', 'z'],
+                 decimal=".")
+        df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+        create_plot_without_error(df['time'], df['z'], 'Sample '+str(i))  # Plot to create
+        plt.savefig(str(directory)+'Plots\\'+'acc_'+str(i)+'.png')
+        plt.clf()
+
 
 print('x_bar: %s'% x_bar)
 print('s: %s'% s)
@@ -263,12 +288,15 @@ t_test(sample, mu)
 #print(stats.norm.ppf(1.96))
 #histogram(sample, 25, False, False, [0, 1], [0,25]) # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-create_plot_without_error(df['time'], df['z'])
+#create_plot_without_error(df['time'], df['z'])
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #logarithmic_fit_plot(df['time'], df['counts'])
 #df_to_csv('raw.scv') #saves df to scv file 'file name'
 #logarithmic_fit_plot(df['time'], df['counts'])
 
+#plt.show()
+
+save_multiple_plots('Data\\Accelerometer (ACC)\\', 'acc_', '.csv', 1, 21)
 """
 TODO:
 Add a chee for the linear regression plot
