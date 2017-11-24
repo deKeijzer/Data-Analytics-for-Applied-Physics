@@ -7,16 +7,9 @@ from pylab import *
 import scipy as sp
 from scipy.stats import norm
 from matplotlib import rc
+import os
 
-"""
-Start of dataframe settings
-"""
-df_live = pd.read_csv('Data\\Accelerometer (ACC)\\acc_15.csv',
-                      sep=',', header=1, names=['x', 'y', 'z'], decimal=".")
-df_edited = pd.DataFrame()
-"""
-End of dataframe settings
-"""
+global df
 
 
 def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
@@ -30,7 +23,7 @@ def data_hist_to_raw(): # 1e meetwaarde lijkt niet te worden meegenomen?
     a = 'time'
     b = 'counts'
 
-    df_copy = df_live.copy()
+    df_copy = df.copy()
     time = []
     index = []
     for i in range(len(df_copy)):
@@ -54,6 +47,34 @@ def add_index_to_time(sample_rate):
     return time
 
 
+def create_df(directory, file_name, i, file_format):
+    """
+    Creates the dataframe. This function can easily be used to iterate over multiple samples.
+    :param directory:
+    :param file_name:
+    :param file_format:
+    :return:
+    """
+    global df
+    path = str(directory) + str(file_name) + str(i) + str(file_format)
+    if os.path.isfile(path):
+        df = pd.read_csv(path, sep=',', header=None, names=['x', 'y', 'z'], decimal=".")
+        # ---- START OF DATAFRAME MANIPULATIONS ----
+        df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+    else:
+        print(path+' does not excist')
+
+
+"""
+Start of dataframe settings
+"""
+df_edited = pd.DataFrame()
+
+create_df('Data\\Accelerometer (ACC)\\', 'acc_', '2', '.csv')
+"""
+End of dataframe settings
+"""
+
 """
 -----START OF USER VARIABLES-----
 """
@@ -64,13 +85,11 @@ x_label = 'Tijd (s)'
 # Edit the df_live to df_edited using data_hist_to_raw()
 # data_hist_to_raw()
 
-
-global df
-df = df_live  # Specify which dataframe to use for calculations & plots
+#df = df_edited  # Specify which dataframe to use for calculations & plots
 
 
 #df['time'] = df['time']*10E-6  # Significance corrections
-df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+
 
 # Remove 0's from df because those arn't measures values from MuonLabIII
 # df = df[~(df == 0).any(axis=1)] # Verpest de fit
@@ -256,7 +275,7 @@ def df_to_csv(file_name):
     df.to_csv(file_name, sep='\t')
 
 
-def save_multiple_plots(directory, file_name, file_format, start, stop):
+def save_multiple_plots(directory, start, stop):
     """
     Saves plots from multiple samples.
     Note that the function to use with its variables is set inside this function.
@@ -269,14 +288,13 @@ def save_multiple_plots(directory, file_name, file_format, start, stop):
     :return:
     """
     global df
+
     for i in range(start, stop):
-        df = pd.read_csv(str(directory)+str(file_name)+str(i)+str(file_format)
-                 , sep=',', header=None, names=['x', 'y', 'z'],
-                 decimal=".")
-        df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+        create_df('Data\\Accelerometer (ACC)\\', 'acc_', i, '.csv')
         create_plot_without_error(df['time'], df['z'], 'Sample '+str(i))  # Plot to create
         plt.savefig(str(directory)+'Plots\\'+'acc_'+str(i)+'.png')
         plt.clf()
+
 
 
 print('x_bar: %s'% x_bar)
@@ -296,7 +314,7 @@ t_test(sample, mu)
 
 #plt.show()
 
-save_multiple_plots('Data\\Accelerometer (ACC)\\', 'acc_', '.csv', 1, 21)
+save_multiple_plots('Data\\Accelerometer (ACC)\\', 1, 21)
 """
 TODO:
 Add a chee for the linear regression plot
