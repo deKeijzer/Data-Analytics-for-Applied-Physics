@@ -60,8 +60,7 @@ def create_df(directory, file_name, i, file_format):
     if os.path.isfile(path):
         df = pd.read_csv(path, sep=',', header=None, names=['x', 'y', 'z'], decimal=".")
         # ---- START OF DATAFRAME MANIPULATIONS ----
-        #df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
-        df['time'] = add_index_to_time(1) # Adds index as x variables
+        df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
     else:
         print(path+' does not excist')
 
@@ -97,8 +96,11 @@ x_label = 'Tijd (s)'
 # df = df[~(df == 0).any(axis=1)] # Verpest de fit
 # print(df['time'])
 
-sample = df['time']  # The sample to do statistical analysis on
-mu = 6  # literature value to compare the sample to
+min_index_val = 12*10**3
+max_index_val = 14*10**3
+sample = df['z'].iloc[min_index_val:max_index_val]  # The sample to do statistical analysis on
+
+mu = -1  # literature value to compare the sample to
 x_significant_digits = 3  # Number of significant digits used in plots
 y_significant_digits = 3  # Number of significant digits used in plots
 
@@ -118,7 +120,7 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex=True)
 
 
-def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim): # even check of sigma wel s is
+def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim, sample_name, x_label, y_label): # even check of sigma wel s is
     """
     Plots a histogram with number_of_bins of given data.
     :param data:
@@ -137,7 +139,7 @@ def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim): 
     x = sample
 
     # Histogram of the data
-    n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor='pink', alpha=0.5, ec='black', label='Sample')
+    n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor='pink', alpha=0.5, ec='black', label=sample_name)
 
     # Creates a best gauss fit line
     if enable_gauss_fit:
@@ -206,7 +208,7 @@ def create_plot(x, x_error, y1, y1_error):
     create_layout()
 
 
-def create_plot_without_error(x, y, label):
+def create_plot_without_error(x, y, sample_number, x_label, y_label):
     """
     Creates a plot of the data.
     Data must be in df['...'] format.
@@ -214,7 +216,7 @@ def create_plot_without_error(x, y, label):
     :param y:
     :return:
     """
-    plt.plot(x, y, '.', color="#ff0000", ms=5, label=r''+str(label)+'')
+    plt.plot(x, y, '.', color="#ff0000", ms=5, label='Sample '+str(sample_number))
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
     plt.xlabel(x_label)
     plt.ylabel(y_label)
@@ -304,7 +306,7 @@ def df_to_csv(file_name):
     df.to_csv(file_name, sep='\t')
 
 
-def save_multiple_plots(directory, start, stop):
+def save_multiple_plots(directory, file_name, file_format, start, stop):
     """
     Saves plots from multiple samples.
     Note that the function to use with its variables is set inside this function.
@@ -319,10 +321,14 @@ def save_multiple_plots(directory, start, stop):
     global df
 
     for i in range(start, stop):
-        create_df('Data\\Accelerometer (ACC)\\', 'acc_', i, '.csv')
-        create_plot_without_error(df['time'], df['z'], 'Sample '+str(i))  # Plot to create
-        plt.savefig(str(directory)+'Plots\\'+'acc_'+str(i)+'.png')
-        plt.clf()
+        path = str(directory) + str(file_name) + str(i) + str(file_format)
+        if os.path.isfile(path):
+            create_df(directory, file_name, i, file_format)
+            create_plot_without_error(df['time'],
+                                      df['z'], i, r'$\mathrm{Tijd \: (s)}$',
+                                      r'$ \mathrm{Versnelling \: in \:} g \mathrm{\: (ms^{-2}) }$')
+            plt.savefig(str(directory)+'Plots\\'+'acc_'+str(i)+'.png')
+            plt.clf()
 
 
 
@@ -346,7 +352,7 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
     xdata = x
     ydata = y
     plt.rc('text', usetex=True)
-    plt.plot(xdata, ydata, '.', label='Sample '+str(sample_number))
+    plt.plot(xdata, ydata, '.', color="#ff0000", label='Sample '+str(sample_number))
     min_line_1 =4*10**3
     max_line_1 =8*10**3
     min_line_2 =12*10**3
@@ -354,13 +360,13 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
     popt1, pcov1 = sp.optimize.curve_fit(line_fit,
                                        xdata.iloc[min_line_1:max_line_1], ydata.iloc[min_line_1:max_line_1],
                                        bounds=([-10., -10.], [10., 10.]))
-    plt.plot(xdata, line_fit(xdata, *popt1), 'r-',
-             label=r"$ a+bx, a=%5.3f, b=%5.3f $" % tuple(popt1))
+    plt.plot(xdata, line_fit(xdata, *popt1), 'r-', color="#0000ff",
+             label=r"$+1g: \: a+bx, \: a=%5.3f, b=%5.3f $" % tuple(popt1))
     popt2, pcov2 = sp.optimize.curve_fit(line_fit,
                                          xdata.iloc[min_line_2:max_line_2], ydata.iloc[min_line_2:max_line_2],
                                        bounds=([-2., -2.], [2., 2.]))
-    plt.plot(xdata, line_fit(xdata, *popt2), 'r-',
-             label=r"$ a+bx, a=%5.3f, b=%5.3f $" % tuple(popt2))
+    plt.plot(xdata, line_fit(xdata, *popt2), 'r-', color="#0000ff",
+             label=r"$-1g: \: a+bx, \: a=%5.3f, b=%5.3f $" % tuple(popt2))
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.legend()
@@ -368,7 +374,12 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
 
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
-#histogram(sample, 25, False, False, [0, 1], [0,25]) # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
+
+#histogram(sample, 20, True, True, [-1.02, -1.0055], [0, 250],
+#          r'$ \mathrm{Sample: \: Calibration \: -1} g $',
+#          r'$ \mathrm{Versnelling \: in \:} g \: (ms^{-2}) $',
+#          r'$ \mathrm{Hoeveelheid \: (-)} $') # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
+
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #create_plot_without_error(df['time'], df['z'], sample_number)
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
@@ -376,11 +387,13 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
 #line_fit_plot(df['time'], df['z'])
 #df_to_csv('raw.scv') #saves df to scv file 'file name'
 #logarithmic_fit_plot(df['time'], df['counts'])
-acc_line_fit_plot(df['time'], df['z'], sample_number, r'$\textit{Tijd } (s)$', r'$ \textit{Versnelling } (ms^-2)}$') # text nog rehtop maken
+
+acc_line_fit_plot(df['time'], df['z'], sample_number, r'$\mathrm{Tijd \:} (s)$',
+                  r'$ \mathrm{Versnelling \: in \:} g \: (ms^-2)}$')
 
 plt.show()
 
-#save_multiple_plots('Data\\Accelerometer (ACC)\\', 1, 21)
+#save_multiple_plots('Data\\Accelerometer (ACC)\\', 'acc_', '.csv', 1, 21)
 """
 TODO:
 Add a chee for the linear regression plot
