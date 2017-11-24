@@ -60,7 +60,8 @@ def create_df(directory, file_name, i, file_format):
     if os.path.isfile(path):
         df = pd.read_csv(path, sep=',', header=None, names=['x', 'y', 'z'], decimal=".")
         # ---- START OF DATAFRAME MANIPULATIONS ----
-        df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+        #df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+        df['time'] = add_index_to_time(1) # Adds index as x variables
     else:
         print(path+' does not excist')
 
@@ -70,7 +71,8 @@ Start of dataframe settings
 """
 df_edited = pd.DataFrame()
 
-create_df('Data\\Accelerometer (ACC)\\', 'acc_', '2', '.csv')
+sample_number = 2
+create_df('Data\\Accelerometer (ACC)\\', 'acc_', sample_number, '.csv')
 """
 End of dataframe settings
 """
@@ -212,7 +214,7 @@ def create_plot_without_error(x, y, label):
     :param y:
     :return:
     """
-    plt.plot(x, y, '.', color="#ff0000", ms=5, label=r''+label+'')
+    plt.plot(x, y, '.', color="#ff0000", ms=5, label=r''+str(label)+'')
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
     plt.xlabel(x_label)
     plt.ylabel(y_label)
@@ -252,6 +254,16 @@ def exponential_fit(x, a, b, c):
     """
     return (1/a)*np.exp(-x/b)+c
 
+def line_fit(x, a, b):
+    """
+    Logarithmic fit
+    :param x:
+    :param a:
+    :param c:
+    :return:
+    """
+    return a+b*x
+
 
 def logarithmic_fit_plot(x, y): # WIP
     font = {'family': 'normal',
@@ -270,6 +282,23 @@ def logarithmic_fit_plot(x, y): # WIP
     plt.legend()
     create_layout()
 
+
+def line_fit_plot(x, y):
+    font = {'family': 'normal',
+            'weight': 'bold',
+            'size': 14}
+
+    matplotlib.rc('font', **font)
+    xdata = x
+    ydata = y
+    plt.rc('text', usetex=True)
+    plt.plot(xdata, ydata, '.', label='sample')
+    popt, pcov = sp.optimize.curve_fit(line_fit, xdata, ydata, bounds=(0, [3., 3., 3]))
+    plt.plot(xdata, line_fit(xdata, *popt), 'r-',
+             #label=r"$\frac{1}{\tau_0}e^{\frac{-x}{\tau_0}}, \tau_0=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
+             label=r"$\frac{1}{a}e^{\frac{-x}{b}}+c, a=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
+    plt.legend()
+    create_layout()
 
 def df_to_csv(file_name):
     df.to_csv(file_name, sep='\t')
@@ -297,24 +326,61 @@ def save_multiple_plots(directory, start, stop):
 
 
 
+
 print('x_bar: %s'% x_bar)
 print('s: %s'% s)
 print('delta_x: %s'% delta_x)
 t_test(sample, mu)
 
+"""
+Accelerometer code
+"""
+
+
+def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
+    font = {'family': 'normal',
+            'weight': 'bold',
+            'size': 14}
+
+    matplotlib.rc('font', **font)
+    xdata = x
+    ydata = y
+    plt.rc('text', usetex=True)
+    plt.plot(xdata, ydata, '.', label='Sample '+str(sample_number))
+    min_line_1 =4*10**3
+    max_line_1 =8*10**3
+    min_line_2 =12*10**3
+    max_line_2 =14*10**3
+    popt1, pcov1 = sp.optimize.curve_fit(line_fit,
+                                       xdata.iloc[min_line_1:max_line_1], ydata.iloc[min_line_1:max_line_1],
+                                       bounds=([-10., -10.], [10., 10.]))
+    plt.plot(xdata, line_fit(xdata, *popt1), 'r-',
+             label=r"$ a+bx, a=%5.3f, b=%5.3f $" % tuple(popt1))
+    popt2, pcov2 = sp.optimize.curve_fit(line_fit,
+                                         xdata.iloc[min_line_2:max_line_2], ydata.iloc[min_line_2:max_line_2],
+                                       bounds=([-2., -2.], [2., 2.]))
+    plt.plot(xdata, line_fit(xdata, *popt2), 'r-',
+             label=r"$ a+bx, a=%5.3f, b=%5.3f $" % tuple(popt2))
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.legend()
+    create_layout()
+
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
 #histogram(sample, 25, False, False, [0, 1], [0,25]) # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-#create_plot_without_error(df['time'], df['z'])
+#create_plot_without_error(df['time'], df['z'], sample_number)
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #logarithmic_fit_plot(df['time'], df['counts'])
+#line_fit_plot(df['time'], df['z'])
 #df_to_csv('raw.scv') #saves df to scv file 'file name'
 #logarithmic_fit_plot(df['time'], df['counts'])
+acc_line_fit_plot(df['time'], df['z'], sample_number, r'$\textit{Tijd } (s)$', r'$ \textit{Versnelling } (ms^-2)}$') # text nog rehtop maken
 
-#plt.show()
+plt.show()
 
-save_multiple_plots('Data\\Accelerometer (ACC)\\', 1, 21)
+#save_multiple_plots('Data\\Accelerometer (ACC)\\', 1, 21)
 """
 TODO:
 Add a chee for the linear regression plot
