@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import TISTNplot as tn
-from pylab import *
 import scipy as sp
+import os
+from pylab import *
 from scipy.stats import norm
 from matplotlib import rc
-import os
 
 global df
 
@@ -60,7 +60,8 @@ def create_df(directory, file_name, i, file_format):
     if os.path.isfile(path):
         df = pd.read_csv(path, sep=',', header=None, names=['x', 'y', 'z'], decimal=".")
         # ---- START OF DATAFRAME MANIPULATIONS ----
-        df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+        #df['time'] = add_index_to_time(50)  # Adds ['time'] column to df
+        df['time'] = add_index_to_time(1)
     else:
         print(path+' does not excist')
 
@@ -70,8 +71,13 @@ Start of dataframe settings
 """
 df_edited = pd.DataFrame()
 
-sample_number = 2
+sample_number = 6
 create_df('Data\\Accelerometer (ACC)\\', 'acc_', sample_number, '.csv')
+
+min_index_val = 12*10**3
+max_index_val = 14*10**3
+#sample = df['z'].iloc[min_index_val:max_index_val]  # The sample to do statistical analysis on
+sample = df['z']
 """
 End of dataframe settings
 """
@@ -95,10 +101,6 @@ x_label = 'Tijd (s)'
 # Remove 0's from df because those arn't measures values from MuonLabIII
 # df = df[~(df == 0).any(axis=1)] # Verpest de fit
 # print(df['time'])
-
-min_index_val = 12*10**3
-max_index_val = 14*10**3
-sample = df['z'].iloc[min_index_val:max_index_val]  # The sample to do statistical analysis on
 
 mu = -1  # literature value to compare the sample to
 x_significant_digits = 3  # Number of significant digits used in plots
@@ -372,6 +374,9 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
     plt.legend()
     create_layout()
 
+def numeric_integration(x, y):
+    return np.trapz(y, x)
+
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
 
@@ -381,17 +386,19 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
 #          r'$ \mathrm{Hoeveelheid \: (-)} $') # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
-#create_plot_without_error(df['time'], df['z'], sample_number)
+#create_plot_without_error(df['time'], df['z'], sample_number, 'x', 'y')
 #linear_regression_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #logarithmic_fit_plot(df['time'], df['counts'])
 #line_fit_plot(df['time'], df['z'])
 #df_to_csv('raw.scv') #saves df to scv file 'file name'
 #logarithmic_fit_plot(df['time'], df['counts'])
 
-acc_line_fit_plot(df['time'], df['z'], sample_number, r'$\mathrm{Tijd \:} (s)$',
-                  r'$ \mathrm{Versnelling \: in \:} g \: (ms^-2)}$')
+#acc_line_fit_plot(df['time'], df['z'], sample_number, r'$\mathrm{Tijd \:} (s)$',
+#                  r'$ \mathrm{Versnelling \: in \:} g \: (ms^-2)}$')
 
-plt.show()
+#plt.show()
+
+print(numeric_integration(df['time'], df['z']))
 
 #save_multiple_plots('Data\\Accelerometer (ACC)\\', 'acc_', '.csv', 1, 21)
 """
