@@ -104,7 +104,7 @@ def histogram(data, num_bins, enable_gauss_fit, enable_axis_lim, x_lim, y_lim, s
     x = sample
 
     # Histogram of the data
-    n, bins, patches = plt.hist(x, num_bins, normed=1, facecolor='pink', alpha=0.5, ec='black', label=sample_name)
+    n, bins, patches = plt.hist(x, num_bins, normed=False, facecolor='pink', alpha=0.5, ec='black', label=sample_name)
 
     # Creates a best gauss fit line
     if enable_gauss_fit:
@@ -360,6 +360,18 @@ def multi_plot_sense_hat():
     plt.subplot(2, 1, 1)  # nrows, ncols, plot_number
     plt.plot(t, x2)
     plt.ylabel(str(x2))
+
+
+def dot_to_comma(number, significance):
+    """
+    Takes a number and replaces it's dot with a comma.
+    Returns the number as a string with set significance.
+    :param number:
+    :return:
+    """
+    numb = str(number)[0:(significance+1)]
+
+    return numb.replace('.', ',')
 
 
 """

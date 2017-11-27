@@ -101,29 +101,17 @@ print('s: %s'% da.s)
 print('delta_x: %s'% da.delta_x)
 da.t_test(da.sample, da.mu)
 
-"""
-MuonLab specific code
-"""
-def plot_histogram_with_fit():
-    # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
-    da.histogram(sample, 100, False, False, [-1.02, -1.0055], [0, 250],
-                 r'$ \mathrm{Sample} \: 2: \: \overline{\tau}_0 = %.2f , \: \Delta \overline{\tau}_0 = %.2f $'
-                 % (da.x_bar, da.delta_x),
-                 r'$ \mathrm{Levensduur} \: \tau_0 \: [\mu s] $',
-                 r'$ \mathrm{Frequentie} \: n \: [-] $')
-
-
-plot_histogram_with_fit()
 
 #print(stats.norm.ppf(1.96))
 #print(stats.norm.ppf(1.96))
 
 
-#da.histogram(sample, 100, False, False, [-1.02, -1.0055], [0, 250],
-#          r'$ \mathrm{Sample} \: 2: \: \overline{\tau}_0 = %.2f , \: \Delta \overline{\tau}_0 = %.2f $'
-#             % (da.x_bar, da.delta_x),
-#          r'$ \mathrm{Levensduur} \: \tau_0 \: [\mu s] $',
-#          r'$ \mathrm{Frequentie} \: n \: [-] $') # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
+da.histogram(sample, 100, False, False, [-1.02, -1.0055], [0, 250],
+          r'$ \mathrm{Sample} \: 2: \quad \overline{\tau}_0 = %s \quad \Delta \overline{\tau}_0 = %s $'
+             % (da.dot_to_comma(da.x_bar, 3), da.dot_to_comma(da.delta_x, 3)),
+             #% (da.x_bar, da.delta_x),
+          r'$ \mathrm{Levensduur} \: \tau_0 \: [\mu s] $',
+          r'$ \mathrm{Frequentie} \: n \: [-] $') # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
 
 #create_plot(df['U'], df['delta U'], df['mgd'], df['delta mgd'])
 #create_plot_without_error(df['t'], df['pressure'], sample_number, 'x', 'y')
