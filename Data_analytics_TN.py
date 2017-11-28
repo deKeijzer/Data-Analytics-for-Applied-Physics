@@ -219,7 +219,7 @@ def linear_regression_plot(x, x_error, y, y_error):
     create_layout()
 
 
-def exponential_decay_fit(x, a, b, c):
+def exponential_decay_fit(t, N_0, tau_0, c):
     """
     Plots 1/tau for lambda
     https://en.wikipedia.org/wiki/Exponential_decay
@@ -228,7 +228,7 @@ def exponential_decay_fit(x, a, b, c):
     :param c:
     :return:
     """
-    return (a)*np.exp(-x/b)+c
+    return (N_0)*np.exp(-t/tau_0)+c
 
 
 def line_fit(x, a, b):

@@ -45,7 +45,7 @@ Start of dataframe settings
 df_edited = pd.DataFrame()
 
 sample_number = ''
-create_df('Data\\MuonLab\\3\\', 'lifetime', sample_number, '.txt')
+create_df('Data\\MuonLab\\2\\', 'lifetime', sample_number, '.txt')
 # Remove 0's from df because those arn't measures values from MuonLabIII
 df = df[~(df == 0).any(axis=1)]  # Verpest de fit
 da.df_TN = df
@@ -70,7 +70,7 @@ End of dataframe settings
 -----START OF USER VARIABLES-----
 """
 # Label data
-da.x_label = r'$ \mathrm{Tijd} = \: [\mu s] $'
+da.x_label = r'$ \mathrm{Tijd} \: [\mu s] $'
 da.y_label = r'$ \mathrm{Frequentie} \: n \: [-] $'
 
 da.mu = 2.19704  # literature value to compare the sample to
@@ -98,7 +98,18 @@ da.t_test(da.sample, da.mu)
 #             r'$ \mathrm{Levensduur} \: \tau_0 \: [\mu s] $',
 #             r'$ \mathrm{Frequentie} \: n \: [-] $')
 
-enable_fit_plot = True
+
+def create_expected_data_array(observed_array, a, b, c):
+    expected_array = []  # array of expected data created from fit
+    for i in range(len(observed_array)):
+        expected_i = da.exponential_decay_fit(i, a, b, c)
+        expected_array.append(expected_i)
+    df['expected'] = expected_array
+
+
+enable_fit_plot = False
+
+create_expected_data_array(df['time'], 383, 2.25, 0)
 
 if enable_fit_plot:
     da.create_plot_without_error(df['time'], df.index.values, '2', da.x_label, da.y_label)
@@ -107,9 +118,15 @@ if enable_fit_plot:
     plt.plot(df['time'], da.exponential_decay_fit(df['time'], *popt), 'r-', color='#0000ff',
              label=r"$ N_0 \cdot e^{-\frac{t}{\tau_0}}+c "
                    r"\quad N_0=%5.0f \quad \tau_0=%5.2f$ \quad \text{c}=%5.2f$ $" % tuple(popt))
+    #plt.plot(df['expected'], df.index.values, color="#000000")
     da.create_layout()
     plt.grid()
 
+print(df[['expected', 'time']])
 
-plt.show()
+#plt.show()
+
+
+
+
 
