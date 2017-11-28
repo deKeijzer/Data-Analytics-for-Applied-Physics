@@ -71,7 +71,7 @@ End of dataframe settings
 """
 # Label data
 da.x_label = r'$ \mathrm{Tijd} \: [\mu s] $'
-da.y_label = r'$ \mathrm{Frequentie} \: n \: [-] $'
+da.y_label = r'$ \mathrm{Hit \: nummer} \: [-] $'
 
 da.mu = 2.19704  # literature value to compare the sample to
 da.x_significant_digits = 3  # Number of significant digits used in plots
@@ -91,13 +91,6 @@ print('s: %s'% da.s)
 print('delta_x: %s'% da.delta_x)
 da.t_test(da.sample, da.mu)
 
-# data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
-#da.histogram(sample, 100, False, False, [-1.02, -1.0055], [0, 250],
-#             r'$ \mathrm{Sample} \: 2: \quad \overline{\tau}_0 = %s \quad \Delta \overline{\tau}_0 = %s $'
-#             % (da.dot_to_comma(da.x_bar, 3), da.dot_to_comma(da.delta_x, 3)),
-#             r'$ \mathrm{Levensduur} \: \tau_0 \: [\mu s] $',
-#             r'$ \mathrm{Frequentie} \: n \: [-] $')
-
 
 def create_expected_data_array(observed_array, a, b, c):
     expected_array = []  # array of expected data created from fit
@@ -107,9 +100,10 @@ def create_expected_data_array(observed_array, a, b, c):
     df['expected'] = expected_array
 
 
-enable_fit_plot = False
+#create_expected_data_array(df['time'], 383, 2.25, 0)
 
-create_expected_data_array(df['time'], 383, 2.25, 0)
+enable_fit_plot = True
+enable_histogram = False
 
 if enable_fit_plot:
     da.create_plot_without_error(df['time'], df.index.values, '2', da.x_label, da.y_label)
@@ -122,9 +116,19 @@ if enable_fit_plot:
     da.create_layout()
     plt.grid()
 
-print(df[['expected', 'time']])
+if enable_histogram:
+    # data, number of bars, Enable gauss fit, Enable_axis_lim, x_lim, y_lim
+    da.histogram(sample, 100, False, False, [-1.02, -1.0055], [0, 250],
+                 r'$ \mathrm{Sample} \: 2: \quad \overline{\tau}_0 = %s \quad \Delta \overline{\tau}_0 = %s $'
+                 % (da.dot_to_comma(da.x_bar, 3), da.dot_to_comma(da.delta_x, 3)),
+                 r'$ \mathrm{Levensduur} \: \tau_0 \: [\mu s] $',
+                 r'$ \mathrm{Frequentie} \: n \: [-] $')
 
-#plt.show()
+
+#print(df[['expected', 'time']])
+#print(df['time'])
+
+plt.show()
 
 
 

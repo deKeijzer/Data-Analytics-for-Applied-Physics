@@ -374,7 +374,15 @@ def dot_to_comma(number, significance):
 
     return numb.replace('.', ',')
 
-
+def df_to_csv(df, path, header_string_list):
+    """
+    Saves df to csv file
+    :param df:
+    :param path:
+    :param header_string_list:
+    :return:
+    """
+    pd.DataFrame.to_csv(path, sep='\t', header=header_string_list)
 """
 TODO:
 Add a chee for the linear regression plot
