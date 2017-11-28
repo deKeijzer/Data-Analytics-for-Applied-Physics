@@ -219,15 +219,16 @@ def linear_regression_plot(x, x_error, y, y_error):
     create_layout()
 
 
-def exponential_fit(x, a, b, c):
+def exponential_decay_fit(x, a, b, c):
     """
-    Logarithmic fit
+    Plots 1/tau for lambda
+    https://en.wikipedia.org/wiki/Exponential_decay
     :param x:
     :param a:
     :param c:
     :return:
     """
-    return (1/a)*np.exp(-x/b)+c
+    return (a)*np.exp(-x/b)+c
 
 
 def line_fit(x, a, b):
@@ -251,8 +252,8 @@ def logarithmic_fit_plot(x, y): # WIP
     ydata = y
     plt.rc('text', usetex=True)
     plt.plot(xdata, ydata, '.', label='sample')
-    popt, pcov = sp.optimize.curve_fit(exponential_fit, xdata, ydata, bounds=(0, [3., 3., 3]))
-    plt.plot(xdata, exponential_fit(xdata, *popt), 'r-',
+    popt, pcov = sp.optimize.curve_fit(exponential_decay_fit, xdata, ydata, bounds=(0, [3., 3., 3]))
+    plt.plot(xdata, exponential_decay_fit(xdata, *popt), 'r-',
              # label=r"$\frac{1}{\tau_0}e^{\frac{-x}{\tau_0}}, \tau_0=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
              label=r"$\frac{1}{a}e^{\frac{-x}{b}}+c, a=%5.3f, b=%5.3f$, c=%5.3f$ $" % tuple(popt))
     plt.legend()
