@@ -45,10 +45,12 @@ Start of dataframe settings
 df_edited = pd.DataFrame()
 
 sample_number = ''
-create_df('Data\\MuonLab\\2\\', 'lifetime', sample_number, '.txt')
+path = 'Data\\MuonLab\\6\\'
+create_df(path, 'delta_time', sample_number, '.txt')
 # Remove 0's from df because those arn't measures values from MuonLabIII
 df = df[~(df == 0).any(axis=1)]  # Verpest de fit
 da.df_TN = df
+
 
 convert_hist_to_raw = True
 
@@ -102,7 +104,7 @@ def create_expected_data_array(observed_array, a, b, c):
 
 #create_expected_data_array(df['time'], 383, 2.25, 0)
 
-enable_fit_plot = True
+enable_fit_plot = False
 enable_histogram = False
 
 if enable_fit_plot:
@@ -128,8 +130,9 @@ if enable_histogram:
 #print(df[['expected', 'time']])
 #print(df['time'])
 
-plt.show()
+#plt.show()
 
+df.to_csv('C:\\Users\\BDK\\PycharmProjects\\untitled\\Data Analytics for Applied Physics\\Data\\MuonLab\\6\\delta_time_raw.txt', sep='\t')
 
 
 

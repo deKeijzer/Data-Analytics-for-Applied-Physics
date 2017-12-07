@@ -1,0 +1,12 @@
+General model:
+     f(x) = a*exp(-x/b)+c
+Coefficients (with 95% confidence bounds):
+       a =        1155  (1132, 1177)
+       b =     0.03495  (0.03369, 0.03621)
+       c =       3.513  (-6.265, 13.29)
+
+Goodness of fit:
+  SSE: 1.081e+06
+  R-square: 0.9639
+  Adjusted R-square: 0.9638
+  RMSE: 39.08
