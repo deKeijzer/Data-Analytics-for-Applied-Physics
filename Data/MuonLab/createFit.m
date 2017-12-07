@@ -1,4 +1,4 @@
-function [fitresult, gof] = createFit1(time, index)
+function [fitresult, gof] = createFit1(time, index, error)
 %CREATEFIT1(TIME,INDEX)
 %  Create a fit.
 %
@@ -30,8 +30,10 @@ opts.StartPoint = [-5 0 -50];
 % Plot fit with data.
 figure( 'Name', 'untitled fit 1' );
 h = plot( fitresult, xData, yData );
+hold on 
+errorbar(time, index, error, 'horizontal', '.');
 
-sample_omschrijving = sprintf('Sample 6: N_0 = 116,8     \\tau = 2,245     c = -1,058')
+sample_omschrijving = sprintf('Sample 5: N_0 = 643,0     \\tau = 2,097     c = -6,188')
 
 legend( h, sample_omschrijving, 'Fit', 'Location', 'NorthEast' );
 % Label axes

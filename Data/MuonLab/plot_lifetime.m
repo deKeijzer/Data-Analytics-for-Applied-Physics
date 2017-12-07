@@ -1,9 +1,11 @@
-load 6/lifetime_raw.txt
-time = lifetime_raw(:,2)
+load 5/lifetime_raw.txt
 index = lifetime_raw(:,1)
+time = lifetime_raw(:,2)
+error = lifetime_raw(:,3)
 
 % labels & legend zelf aanpassen in createFit
-createFit(time, index)
+createFit(time, index, error)
+hold on
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.3f')
@@ -20,4 +22,4 @@ set(gca, 'YTickLabel', nieuw_y)
 % Correcte plot layout maken
 xlabel(' Verblijftijd [$\mathrm{\mu}$s] ', 'Interpreter', 'latex')
 ylabel(' Meting nummer [-] ', 'Interpreter', 'latex')
-hold off
+

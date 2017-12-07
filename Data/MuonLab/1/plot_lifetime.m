@@ -20,5 +20,4 @@ set(gca, 'YTickLabel', nieuw_y)
 % Correcte plot layout maken
 xlabel(' Verblijftijd [$\mathrm{\mu}$s] ', 'Interpreter', 'latex')
 ylabel(' Meting nummer [-] ', 'Interpreter', 'latex')
-legend('show', 'Location', 'NorthEast', 'Meetwaarden', 'Gauss fit');
 hold off

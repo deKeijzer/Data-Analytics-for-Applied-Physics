@@ -44,8 +44,9 @@ Start of dataframe settings
 """
 df_edited = pd.DataFrame()
 
+folder_number = '1'
 sample_number = ''
-path = 'Data\\MuonLab\\6\\'
+path = 'Data\\MuonLab\\'+folder_number+'\\'
 create_df(path, 'lifetime', sample_number, '.txt')
 # Remove 0's from df because those arn't measures values from MuonLabIII
 df = df[~(df == 0).any(axis=1)]  # Verpest de fit
@@ -101,8 +102,16 @@ def create_expected_data_array(observed_array, a, b, c):
         expected_array.append(expected_i)
     df['expected'] = expected_array
 
+def add_error(sample_array, error_value):
+    error_array = []  # array of expected data created from fit
+    for i in range(len(sample_array)):
+        error_array.append(error_value)
+    df['error'] = error_array
 
-create_expected_data_array(df['time'], 383, 2.25, 0)
+
+add_error(df['time'], 10*10**-9)
+
+#create_expected_data_array(df['time'], 383, 2.25, 0)
 
 enable_fit_plot = False
 enable_histogram = False
@@ -127,12 +136,13 @@ if enable_histogram:
                  r'$ \mathrm{Frequentie} \: n \: [-] $')
 
 
-print(df[['expected', 'time']])
+
 #print(df['time'])
 
 #plt.show()
 
-df.to_csv('C:\\Users\\BDK\\PycharmProjects\\untitled\\Data Analytics for Applied Physics\\Data\\MuonLab\\6\\lifetime_raw.txt', sep='\t')
+df.to_csv('C:\\Users\\BDK\\PycharmProjects\\untitled\\Data Analytics for Applied Physics'
+          '\\Data\\MuonLab\\'+folder_number+'\\lifetime_raw.txt', sep='\t')
 
 
 
