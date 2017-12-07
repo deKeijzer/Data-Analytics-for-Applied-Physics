@@ -1,4 +1,4 @@
-load 2/lifetime_raw.txt
+load 6/lifetime_raw.txt
 time = lifetime_raw(:,2)
 index = lifetime_raw(:,1)
 
@@ -20,5 +20,4 @@ set(gca, 'YTickLabel', nieuw_y)
 % Correcte plot layout maken
 xlabel(' Verblijftijd [$\mathrm{\mu}$s] ', 'Interpreter', 'latex')
 ylabel(' Meting nummer [-] ', 'Interpreter', 'latex')
-legend('show', 'Location', 'NorthEast', 'Meetwaarden', 'Gauss fit');
 hold off

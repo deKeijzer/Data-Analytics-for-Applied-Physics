@@ -30,7 +30,10 @@ opts.StartPoint = [-5 0 -50];
 % Plot fit with data.
 figure( 'Name', 'untitled fit 1' );
 h = plot( fitresult, xData, yData );
-legend( h, 'Sample 2', 'Fit', 'Location', 'NorthEast' );
+
+sample_omschrijving = sprintf('Sample 6: N_0 = 116,8     \\tau = 2,245     c = -1,058')
+
+legend( h, sample_omschrijving, 'Fit', 'Location', 'NorthEast' );
 % Label axes
 xlabel(' Verblijftijd [$\mathrm{\mu}$s] ', 'Interpreter', 'latex')
 ylabel(' Meting nummer [-] ', 'Interpreter', 'latex')
