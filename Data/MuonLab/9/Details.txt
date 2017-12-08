@@ -1,0 +1,3 @@
+PMT: 1700 V
+Threshold: 400 mV
+Runtime:  1 uur 30 minuten
