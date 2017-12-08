@@ -59,6 +59,7 @@ def pressure_plot(x, y, sample_number, x_label, y_label):
     :return:
     """
     min_1 = 760
+    max_1 = 1520
     df_A = pd.DataFrame()  # Creates new df
     df1 = pd.DataFrame()  # Creates new df
     df_A['index'] = x.index.values
@@ -74,9 +75,17 @@ def pressure_plot(x, y, sample_number, x_label, y_label):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    ax.plot(x.index.values, y, '.', color="#ff0000", ms=5, label='Sample: pressure_' + str(sample_number))
-    ax.plot(df1['x_1'], df1['y_1'], '.', color="#f9903b", ms=6, label='Data voor fit 1 : '+'$\mu_1$ = %.2f $\quad$ $\Delta \mu_1$ = %.4f' % (x_bar1, delta_x1))
+    sample_rate = 1/25
 
+    # Hoogte berekenen
+    a_int = trapzArray(df1['y_1'], sample_rate)  # eerste integraal
+
+    #b_int = trapzArray(a_int, 1)  # tweede intergraal
+
+    b_int = np.trapz(a_int, dx=sample_rate)
+
+    ax.plot(x.index.values, y, '.', color="#ff0000", ms=5, label='Sample: acc_' + str(sample_number))
+    ax.plot(df1['x_1'], df1['y_1'], '.', color="#f9903b", ms=6, label='Berekende hoogte : '+'$\quad h$ = %.2f m' % (b_int))
 
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
     plt.xlabel(x_label)
@@ -84,6 +93,13 @@ def pressure_plot(x, y, sample_number, x_label, y_label):
     da.create_layout()
     fig.canvas.draw()
 
+
+
+def trapzArray(y, dx):
+    F = []
+    for i in range(len(y)):
+        F.append(np.trapz (y[0:i], dx = dx))
+    return F
 
 da.x_significant_digits = 3  # Number of significant digits used in plots
 da.y_significant_digits = 3  # Number of significant digits used in plots
@@ -94,6 +110,8 @@ sample_number = '14'
 file_format = '.csv'
 
 create_df(directory, file_name, sample_number, file_format)
+
+df['acc_z'] = df['acc_z']-0.981  # valversnelling van de gemeten versnelling halen
 
 pressure_plot(df['t'], df['acc_z'], sample_number, 'x', 'y')
 
