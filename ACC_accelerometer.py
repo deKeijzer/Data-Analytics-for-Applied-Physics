@@ -47,19 +47,20 @@ def create_df(directory, file_name, i, file_format):
         print(path+' does not excist')
 
 
-def pressure_plot(x, y, sample_number, x_label, y_label):
+def pressure_plot(x, y, sample_number, x_label, y_label, min_1, max_1, sample_rate):
     """
-    Creates a plot of the data.
+        Creates a plot of the data.
     Data must be in df_TN['...'] format.
     :param x:
     :param y:
     :param sample_number:
     :param x_label:
     :param y_label:
+    :param min_1: min index
+    :param max_1: max index for data selection
+    :param sample_rate: in Hz
     :return:
     """
-    min_1 = 760
-    max_1 = 1520
     df_A = pd.DataFrame()  # Creates new df
     df1 = pd.DataFrame()  # Creates new df
     df_A['index'] = x.index.values
@@ -75,17 +76,17 @@ def pressure_plot(x, y, sample_number, x_label, y_label):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    sample_rate = 1/25
-
     # Hoogte berekenen
-    a_int = trapzArray(df1['y_1'], sample_rate)  # eerste integraal
+    a_int = trapzArray(df1['y_1'], 1/sample_rate)  # eerste integraal
 
     #b_int = trapzArray(a_int, 1)  # tweede intergraal
 
-    b_int = np.trapz(a_int, dx=sample_rate)
+    b_int = np.trapz(a_int, dx=1/sample_rate)
 
-    ax.plot(x.index.values, y, '.', color="#ff0000", ms=5, label='Sample: acc_' + str(sample_number))
-    ax.plot(df1['x_1'], df1['y_1'], '.', color="#f9903b", ms=6, label='Berekende hoogte : '+'$\quad h$ = %.2f m' % (b_int))
+    ax.plot(x.index.values, y, '.',
+            color="#ff0000", ms=5, label='Sample: acc_' + str(sample_number)+'$\quad $ Sample Rate: %.1f Hz' % sample_rate)
+    ax.plot(df1['x_1'], df1['y_1'], '.', color="#f9903b",
+            ms=6, label='Berekende hoogte : '+'$\quad h$ = %.2f m' % (b_int))
 
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
     plt.xlabel(x_label)
@@ -94,8 +95,13 @@ def pressure_plot(x, y, sample_number, x_label, y_label):
     fig.canvas.draw()
 
 
-
 def trapzArray(y, dx):
+    """
+    Numerically integrates an array y
+    :param y:
+    :param dx:
+    :return:
+    """
     F = []
     for i in range(len(y)):
         F.append(np.trapz (y[0:i], dx = dx))
@@ -106,14 +112,30 @@ da.y_significant_digits = 3  # Number of significant digits used in plots
 
 directory = 'Data\\Accelerometer (ACC)\\'
 file_name = 'acc_'
-sample_number = '14'
+sample_number = '19'
 file_format = '.csv'
 
 create_df(directory, file_name, sample_number, file_format)
 
 df['acc_z'] = df['acc_z']-0.981  # valversnelling van de gemeten versnelling halen
 
-pressure_plot(df['t'], df['acc_z'], sample_number, 'x', 'y')
+pressure_plot(df['t'], df['acc_z'], sample_number, 'Index [-]', 'Versnelling in $g$ [m/s]', 660, 890, 12.5)
+
+#plt.savefig(str(directory)+'Plots\\'+'acc_'+sample_number+'.png')
+
+a = [2.99, 2.41, 3.33, 4.52, 3.61, 3.06]
+b = [8.83, 8.46, 6.67, 9.28]
+
+df_a = pd.DataFrame()
+df_b = pd.DataFrame()
+
+df_a['a'] = a
+df_b['b'] = b
+
+print('mean verdieping delta 1: '+str(np.mean(df_a['a'])))
+print('mean verdieping delta 2: '+str(np.mean(df_b['b'])))
+print('delta verdieping delta 1: '+str(np.std(df_a['a'])/(len(df_a['a']))**(1/2)))
+print('delta verdieping delta 1: '+str(np.std(df_b['b'])/(len(df_b['b']))**(1/2)))
 
 plt.show()
 
@@ -122,41 +144,6 @@ plt.show()
 
 
 
-
-"""
-Start of dataframe settings
-"""
-df_edited = pd.DataFrame()
-
-sample_number = '2'
-
-min_index_val = 12*10**3
-max_index_val = 14*10**3
-#sample = df['z'].iloc[min_index_val:max_index_val]  # The sample to do statistical analysis on
-sample = df['t']
-"""
-End of dataframe settings
-"""
-
-"""
------START OF USER VARIABLES-----
-"""
-# Label data
-y_label = 'Versnelling'
-x_label = 'Tijd (s)'
-
-# Edit the df_live to df_edited using data_hist_to_raw()
-#data_hist_to_raw()
-
-#df = df_edited  # Specify which dataframe to use for calculations & plots
-
-
-#df['time'] = df['time']*10E-6  # Significance corrections
-
-
-# Remove 0's from df because those arn't measures values from MuonLabIII
-# df = df[~(df == 0).any(axis=1)] # Verpest de fit
-# print(df['time'])
 
 mu = -1  # literature value to compare the sample to
 
@@ -189,7 +176,7 @@ def create_plot_without_error(x, y, sample_number, x_label, y_label):
     #plt.plot(x, 0 * x + mu, '-', color="#ff0000", ms=5) # Creates a line at (literature) y value
     plt.xlabel(x_label)
     plt.ylabel(y_label)
-    create_layout()
+    da.create_layout()
 
 def save_multiple_plots(directory, file_name, file_format, start, stop):
     """
@@ -214,11 +201,6 @@ def save_multiple_plots(directory, file_name, file_format, start, stop):
                                       r'$ \mathrm{Versnelling in \:} g \: [ms^{-2}]$')
             plt.savefig(str(directory)+'Plots\\'+'acc_'+str(i)+'.png')
             plt.clf()
-
-
-def numeric_integration(x, y):
-    return np.trapz(y, x)
-
 
 print('x_bar: %s'% x_bar)
 print('s: %s'% s)
