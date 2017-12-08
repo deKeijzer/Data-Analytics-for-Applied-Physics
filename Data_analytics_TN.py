@@ -329,18 +329,20 @@ def acc_line_fit_plot(x, y, sample_number, x_label, y_label): # WIP
     ydata = y
     plt.rc('text', usetex=True)
     plt.plot(xdata, ydata, '.', color="#ff0000", label='Sample '+str(sample_number))
-    min_line_1 =4*10**3
-    max_line_1 =8*10**3
-    min_line_2 =12*10**3
-    max_line_2 =14*10**3
+    min_line_1 =1512723568
+    max_line_1 =1512723592
+    min_line_2 =0
+    max_line_2 =1
     popt1, pcov1 = sp.optimize.curve_fit(line_fit,
-                                         xdata.iloc[min_line_1:max_line_1], ydata.iloc[min_line_1:max_line_1],
-                                         bounds=([-10., -10.], [10., 10.]))
+                                         xdata.iloc[min_line_1:max_line_1], ydata.iloc[min_line_1:max_line_1]
+                                         ,bounds=([-5., -5.], [5., 5.])
+                                         )
     plt.plot(xdata, line_fit(xdata, *popt1), 'r-', color="#0000ff",
              label=r"$+1g: \: a+bx, \: a=%5.3f, b=%5.3f $" % tuple(popt1))
     popt2, pcov2 = sp.optimize.curve_fit(line_fit,
-                                         xdata.iloc[min_line_2:max_line_2], ydata.iloc[min_line_2:max_line_2],
-                                         bounds=([-2., -2.], [2., 2.]))
+                                         xdata.iloc[min_line_2:max_line_2], ydata.iloc[min_line_2:max_line_2]
+                                         ,bounds=([-5., -5.], [5., 5.])
+                                         )
     plt.plot(xdata, line_fit(xdata, *popt2), 'r-', color="#0000ff",
              label=r"$-1g: \: a+bx, \: a=%5.3f, b=%5.3f $" % tuple(popt2))
     plt.xlabel(x_label)
