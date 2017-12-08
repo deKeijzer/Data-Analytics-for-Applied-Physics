@@ -44,7 +44,7 @@ Start of dataframe settings
 """
 df_edited = pd.DataFrame()
 
-folder_number = '8'
+folder_number = '9'
 sample_number = ''
 path = 'Data\\MuonLab\\'+folder_number+'\\'
 create_df(path, 'delta_time', sample_number, '.txt')
