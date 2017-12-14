@@ -1,0 +1,3 @@
+PMT Voltage: 1500 V (hamat)
+Threshold voltage: 0 mV
+Runtime: 4u 38m

@@ -1,15 +1,19 @@
-sample = importdata('call_1.csv'); % column 2 3 4 zijn xyz acc
+sample = importdata('call_2.csv'); % column 2 3 4 zijn xyz acc
 
 time = sample(:,1);
-acc_x = sample(:,3);
-acc_y = sample(:,4); 
-acc_z = sample(:,5);
+time = time - time(1,1); % start waarde van de tijd afhalen
+time = time/(60^2); % omzetten naar uren
+time = time/24; % omzetten naar dagen
+
+acc_x = sample(:,2);
+acc_y = sample(:,3); 
+acc_z = sample(:,4);
 
 z = sin(acc_x)+cos(acc_y);
 
-surf(acc_x, acc_y, z)
+plot(time, acc_z, '.')
 
-xlabel('Frequentie (Hz)')
-ylabel('Amplitude [-]')
+xlabel('Tijd [dagen]', 'Interpreter', 'latex')
+ylabel('Versnelling in $g$ [m/s$^2$]', 'Interpreter', 'latex')
 grid on
 

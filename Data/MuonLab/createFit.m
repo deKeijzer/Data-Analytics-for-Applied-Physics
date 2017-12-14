@@ -25,7 +25,7 @@ opts.Lower = [50 1e-05 -50];
 opts.StartPoint = [-5 0 -50];
 
 % Fit model to data.
-[fitresult, gof] = fit( xData, yData, ft, opts );
+[fitresult, gof] = fit( xData, yData, ft, opts )
 
 % Plot fit with data.
 figure( 'Name', 'untitled fit 1' );
@@ -33,7 +33,7 @@ h = plot( fitresult, xData, yData );
 hold on 
 errorbar(time, index, error, 'horizontal', '.');
 
-sample_omschrijving = sprintf('Sample 5: N_0 = 643,0     \\tau = 2,097     c = -6,188')
+sample_omschrijving = sprintf('Sample 14: N_0 = 2861     \\tau = 1,359    c = 165,1')
 
 legend( h, sample_omschrijving, 'Fit', 'Location', 'NorthEast' );
 % Label axes

@@ -1,0 +1,3 @@
+PMT Voltage: 1420 V
+Threshold voltage: 150 mV
+Runtime: 3d 22u 29m

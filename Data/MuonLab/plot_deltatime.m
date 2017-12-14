@@ -1,4 +1,4 @@
-load 9/delta_time_raw.txt
+load 13/delta_time_raw.txt
 time_raw = delta_time_raw(:,2);
 index_raw = delta_time_raw(:,1);
 
@@ -23,7 +23,7 @@ set(gca, 'YTickLabel', nieuw_y2)
 
 mu = mean(time_raw)
 sigma = std(time_raw)
-sample_omschrijving = sprintf('Sample 6: \\mu = %.2f     \\sigma = %.2f', mu, sigma)
+sample_omschrijving = sprintf('Sample 12: \\mu = %.2f     \\sigma = %.2f', mu, sigma)
 
 % Correcte plot layout maken
 ylabel('Frequentie [-]')

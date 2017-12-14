@@ -1,0 +1,3 @@
+PMT Voltage: 1800 V (philips)
+Threshold voltage: 44,8 mV
+Runtime: 13 min
