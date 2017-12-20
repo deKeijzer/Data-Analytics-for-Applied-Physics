@@ -1,6 +1,6 @@
-load 15/delta_time_raw.txt
-time_raw = delta_time_raw(:,2);
-index_raw = delta_time_raw(:,1);
+sample = importdata('samples_data_geselecteerd.txt');
+sample = sample.data;
+time_raw = sample(:,5);
 
 [hts,ctrs] = hist(time_raw, 59);
 bar(ctrs,hts,'hist') % plot histogram
@@ -23,7 +23,7 @@ set(gca, 'YTickLabel', nieuw_y2)
 
 mu = mean(time_raw)
 sigma = std(time_raw)
-sample_omschrijving = sprintf('Sample 15: \\mu = %.2f     \\sigma = %.2f', mu, sigma)
+sample_omschrijving = sprintf('Sample 15: \\mu = %.3f     \\sigma = %.3f', mu, sigma)
 
 % Correcte plot layout maken
 ylabel('Frequentie [-]')

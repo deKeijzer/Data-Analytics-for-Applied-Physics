@@ -22,7 +22,7 @@ ft = fittype( 'a*exp(-x/b)+c', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.Lower = [50 1e-05 -50];
-opts.StartPoint = [-5 0 -50];
+opts.StartPoint = [100 2 -50];
 
 % Fit model to data.
 [fitresult, gof] = fit( xData, yData, ft, opts )
@@ -33,9 +33,9 @@ h = plot( fitresult, xData, yData );
 hold on 
 errorbar(time, index, error, 'horizontal', '.');
 
-sample_omschrijving = sprintf('Sample 14: N_0 = 2861     \\tau = 1,359    c = 165,1')
+sample_omschrijving = sprintf('Sample 11: N_0 = 3,373\\times 10^7  \\tau = 0,02918    c = -0,3023');
 
-legend( h, sample_omschrijving, 'Fit', 'Location', 'NorthEast' );
+legend( h, sample_omschrijving, 'Fit', 'Location', 'NorthEast', 'Interpreter', 'latex');
 % Label axes
 xlabel(' Verblijftijd [$\mathrm{\mu}$s] ', 'Interpreter', 'latex')
 ylabel(' Meting nummer [-] ', 'Interpreter', 'latex')
