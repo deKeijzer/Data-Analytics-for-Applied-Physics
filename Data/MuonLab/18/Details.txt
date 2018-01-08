@@ -1,0 +1,5 @@
+PMT Voltage: 1450V (hamat)
+Threshold voltage: 100mV
+Runtime: 1 dag
+
+offset meting, delta x = 0 plus er ligt een lode balk 35 cm bove nde detector

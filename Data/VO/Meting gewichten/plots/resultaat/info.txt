@@ -1,0 +1,2 @@
+piek 1 is de piek rond 1,25 Hz
+piek 2 is de piek rond 2,5 Hz

@@ -1,0 +1,29 @@
+a_1 = A meting 1
+A_2 = A meting 2 etc
+
+b = gewicht a + b
+c = gewicht a+b+c etc...
+
+gewichten worden dus op elkaar gezet
+
+a = rustmassa
+b = 136.445 g
+c = 135.839 g
+d = 136.304 g
+e = 135.100 g 
+f = 135.260 g
+g = 134.502 g
+h = 136.352 g
+
+----
+frequentie metingen
+
+bij massa h = maximaal dus alle gewichten + rust
+start bij 5 v tot 
+
+freq_1 = 5v
+freq_2 = 6v etc
+
+-----
+
+callibbratie tot 3 Hz want vanaf hier komen de gewichtjes los dus word er niet verder gemeten.

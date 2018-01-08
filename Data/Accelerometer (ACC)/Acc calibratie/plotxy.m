@@ -1,4 +1,4 @@
-sample = importdata('call_4.csv'); % column 2 3 4 zijn xyz acc
+sample = importdata('call_6.csv'); % column 2 3 4 zijn xyz acc
 
 time = sample(:,1);
 time = time - time(1,1); % start waarde van de tijd afhalen

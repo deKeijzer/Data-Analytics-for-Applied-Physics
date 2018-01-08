@@ -1,0 +1,3 @@
+PMT Voltage: 1420V (hamat)
+Threshold voltage: 150 mV
+Runtime: 4u 
