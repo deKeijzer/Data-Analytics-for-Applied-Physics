@@ -22,11 +22,11 @@ kracht = m_tot.*(a_z+9.81)
 
 
 % fit_piek1(massa, spanning_piek1);
-fit_gevoeligheid_piek2(kracht, spanning_piek2)
+fit_gevoeligheid_piek1(kracht, spanning_piek1)
 
 % labels & legend zelf aanpassen in createFit
 
-legend('Meetwaarden', 'Fit: ax+b      a=8,916\times10^{-6}     b=1,549\times10^{-5}     R^2=0,8158', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+legend('Meetwaarden', 'Fit: ax+b      a=1,466\times10^{-5}     b=-9,546\times10^{-6}     R^2=0,8802', 'Interpreter', 'latex', 'Location' ,'NorthWest')
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.3f')
@@ -42,7 +42,7 @@ set(gca, 'YTickLabel', nieuw_y)
 
 % Label axes
 xlabel('Kracht $F$ [N]', 'Interpreter', 'latex')
-ylabel('Spanning $U$ $\times$ 10$^{-4}$ [V] ', 'Interpreter', 'latex')
+ylabel('Spanning $U$ $\times$ 10$^{-5}$ [V] ', 'Interpreter', 'latex')
 grid on
 
 

@@ -1,6 +1,6 @@
-read_dir = 'Meting gewichten\';
+read_dir = 'call\v2.0\';
 write_dir = 'call\matlab_data\';
-filename = 'h_3';
+filename = '0.1';
 file_extension = '.txt';
 
 % strcat() voegt string bij elkaar toe 'x'+'y' = 'xy'
