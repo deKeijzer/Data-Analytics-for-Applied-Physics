@@ -1,6 +1,6 @@
 read_dir = 'call\v2.0\';
 write_dir = 'call\matlab_data\';
-filename = '4.0';
+filename = '2.0';
 file_extension = '.txt';
 
 % strcat() voegt string bij elkaar toe 'x'+'y' = 'xy'

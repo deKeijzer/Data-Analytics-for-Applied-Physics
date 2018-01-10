@@ -1,4 +1,4 @@
-piek 1 is de piek rond 1,25 Hz
+piek 1 is de piek rond 1,25 Hz (1,25 en 1,30 Hz)
 piek 2 is de piek rond 2,5 Hz
 
 massa piek 1 = 0.06936 kg
