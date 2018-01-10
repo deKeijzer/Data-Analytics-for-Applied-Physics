@@ -1,6 +1,6 @@
 read_dir = 'call\v2.0\';
 write_dir = 'call\matlab_data\';
-filename = '0.1';
+filename = '4.0';
 file_extension = '.txt';
 
 % strcat() voegt string bij elkaar toe 'x'+'y' = 'xy'
@@ -70,4 +70,4 @@ new_y1 = strrep(y1(:),'.',',');
 set(gca, 'YTickLabel', new_y1)
 
 % Plot opslaan
-print(strcat(read_dir,'plots\',filename),'-dpng')
+print(strcat(read_dir,'plots\',filename,'.png'),'-dpng')
