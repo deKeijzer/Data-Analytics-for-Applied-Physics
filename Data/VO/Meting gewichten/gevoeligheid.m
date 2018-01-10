@@ -12,7 +12,7 @@ spanning_piek2 = sample(:,5);
 % Gegegevens voor bepalen gevoeligheid
 rust_massa = 0.25827;
 omega = freq_piek2*2*pi;
-r = 6.9E-2; % 5.9 +- 0.5 + 1 cm? voor radius vd pijp waar die aan zit
+r = 4.3E-2; % 5.9 +- 0.5 + 1 cm? voor radius vd pijp waar die aan zit
 m_tot = massa + rust_massa;
 
 % kracht = omega.^2*r.*m_tot;

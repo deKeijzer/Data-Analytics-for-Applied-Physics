@@ -11,7 +11,7 @@ gemeten_spanning = sample(:,4);
 massa = 0.949802;
 rust_massa = 0.06936;
 omega = frequentie*2*pi;
-r = 6.9E-2; % 5.9 +- 0.5 + 1 cm? voor radius vd pijp waar die aan zit
+r = 4.3E-2; % 5.9 +- 0.5 + 1 cm? voor radius vd pijp waar die aan zit
 m_tot = massa + rust_massa;
 
 % kracht = omega.^2*r.*m_tot;
@@ -20,10 +20,10 @@ kracht = m_tot.*(a_z+9.81);
 
 % Hysteresis zichtbaar, dus arrays splitten voor heen en terugweg
 
-kracht_heen = kracht(1:11);
-kracht_terug = kracht(12:24);
-gemeten_spanning_heen = gemeten_spanning(1:11);
-gemeten_spanning_terug = gemeten_spanning(12:24);
+kracht_heen = 1./kracht(1:11);
+kracht_terug = 1./kracht(12:24);
+gemeten_spanning_heen = 1./gemeten_spanning(1:11);
+gemeten_spanning_terug = 1./gemeten_spanning(12:24);
 % fit_piek1(massa, spanning_piek1);
 
 % fit_heen(kracht_heen, gemeten_spanning_heen);
