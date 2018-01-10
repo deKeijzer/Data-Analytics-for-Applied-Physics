@@ -16,8 +16,8 @@ r = 4.3E-2; % 5.9 +- 0.5 + 1 cm? voor radius vd pijp waar die aan zit
 m_tot = massa + rust_massa;
 
 % kracht = omega.^2*r.*m_tot;
-a_z = r*omega.^2
-kracht = m_tot.*(a_z)
+a_z = -r*omega
+kracht = m_tot.*(a_z+9.81)
 
 
 
@@ -26,7 +26,7 @@ fit_gevoeligheid_piek1(kracht, spanning_piek1)
 
 % labels & legend zelf aanpassen in createFit
 
-legend('Meetwaarden', 'Fit: ax+b      a=1,487\times10^{-5}     b=-2,560\times10^{-5}     R^2=0,8768', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+legend('Meetwaarden', 'Fit: ax+b      a=1,487\times10^{-5}     b=-2,560\times10^{-5}     R^2=0,8802', 'Interpreter', 'latex', 'Location' ,'NorthWest')
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.3f')
