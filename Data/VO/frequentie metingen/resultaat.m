@@ -63,8 +63,8 @@ hold on
 % labels & legend zelf aanpassen in createFit
 legend_fit_laaghoog = 'Fit_{oplopend}: ax^3+bx^2+cx+d      a=-1,236\times10^{-3}     b=3,86\times10^{-2}     c=-3,992\times10^{-1}     d=1,37    R^2=0,9959'
 legend_fit_hooglaag = 'Fit_{aflopend}: ax^3+bx^2+cx+d      a=-4,551\times10^{-3}     b=1,337\times10^{-1}     c=-1,308     d=4,269    R^2=0,9842'
-legend('Meetwaarden', legend_fit_laaghoog, legend_fit_hooglaag, 'Interpreter', 'latex', 'Location' ,'NorthEast')
-% legend('Meetwaarden oplopend','Fit oplopend','Meetwaarden aflopend', 'Fit aflopend', 'Interpreter', 'latex', 'Location' ,'NorthEast')
+% legend('Meetwaarden', legend_fit_laaghoog, legend_fit_hooglaag, 'Interpreter', 'latex', 'Location' ,'NorthEast')
+legend('Meetwaarden oplopend','Fit oplopend','Meetwaarden aflopend', 'Fit aflopend', 'Interpreter', 'latex', 'Location' ,'NorthEast')
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.3f')
@@ -79,8 +79,8 @@ nieuw_y = strrep(y(:),'.',',');
 set(gca, 'YTickLabel', nieuw_y)
 
 % Label axes
-xlabel('Massa $m$ [Kg]', 'Interpreter', 'latex')
-ylabel('Spanning $U$ $\times$ 10$^{-4}$ [V] ', 'Interpreter', 'latex')
+xlabel('Kracht $F$ [N]', 'Interpreter', 'latex')
+ylabel('Uitgansspanning $U$ $\times$ 10$^{-4}$ [V] ', 'Interpreter', 'latex')
 grid on
 
 
