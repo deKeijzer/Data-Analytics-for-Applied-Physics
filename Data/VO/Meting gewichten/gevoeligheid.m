@@ -5,7 +5,7 @@ time_raw = sample(:,5);
 % meting = sample(:,1);
 massa = sample(:,1);
 freq_piek1 = sample(:,2);
-spanning_piek1 = sample(:,3);
+% spanning_piek1 = sample(:,3);
 freq_piek2 = sample(:,4);
 spanning_piek2 = sample(:,5);
 
@@ -17,7 +17,7 @@ m_tot = massa + rust_massa;
 
 % kracht = omega.^2*r.*m_tot;
 a_z = r*omega.^2
-kracht = m_tot.*(a_z)
+% kracht = m_tot.*(a_z)
 
 
 
@@ -26,8 +26,8 @@ fit_gevoeligheid_piek1(kracht, spanning_piek1)
 
 % labels & legend zelf aanpassen in createFit
 xlim([0 14])
-% legend('Meetwaarden', 'Fit: ax+b      a=1,487\times10^{-5}     b=-2,560\times10^{-5}     R^2=0,8768', 'Interpreter', 'latex', 'Location' ,'NorthWest')
-legend('Meetwaarden', 'Fit', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+legend('Meetwaarden', 'Fit: ax+b      a=9,778\times10^{-6}     b=-9,980\times10^{-7}     R^2=0,9451', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+% legend('Meetwaarden', 'Fit', 'Interpreter', 'latex', 'Location' ,'NorthWest')
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.3f')
