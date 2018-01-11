@@ -27,20 +27,20 @@ fit_gevoeligheid_piek1(kracht, spanning_piek1)
 % labels & legend zelf aanpassen in createFit
 xlim([0 14])
 ylim([0 1.5E-4])
-% legend('Meetwaarden', 'Fit: ax+b      a=9,796\times10^{-6}     b=-1,169\times10^{-6}     R^2=0,7433', 'Interpreter', 'latex', 'Location' ,'NorthWest')
-legend('Meetwaarden', 'Fit', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+legend('Meetwaarden', 'Fit: ax+b      a=9,796\times10^{-6}     b=-1,169\times10^{-6}     R^2=0,7433', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+% legend('Meetwaarden', 'Fit', 'Interpreter', 'latex', 'Location' ,'NorthWest')
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.3f')
 ytickformat('%.3f')
 
 % % Punt naar comma veranderen voor de de assen van plot 1
-% x = get(gca, 'XTickLabel');
-% nieuw_x = strrep(x(:),'.',',');
-% set(gca, 'XTickLabel', nieuw_x)
-% y = get(gca, 'YTickLabel');
-% nieuw_y = strrep(y(:),'.',',');
-% set(gca, 'YTickLabel', nieuw_y)
+x = get(gca, 'XTickLabel');
+nieuw_x = strrep(x(:),'.',',');
+set(gca, 'XTickLabel', nieuw_x)
+y = get(gca, 'YTickLabel');
+nieuw_y = strrep(y(:),'.',',');
+set(gca, 'YTickLabel', nieuw_y)
 
 % Label axes
 xlabel('Kracht $F$ [N]', 'Interpreter', 'latex')
