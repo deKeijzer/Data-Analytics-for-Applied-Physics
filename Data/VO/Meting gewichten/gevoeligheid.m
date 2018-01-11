@@ -4,8 +4,8 @@ time_raw = sample(:,5);
 
 % meting = sample(:,1);
 massa = sample(:,1);
-% freq_piek1 = sample(:,2);
-% spanning_piek1 = sample(:,3);
+freq_piek1 = sample(:,2);
+spanning_piek1 = sample(:,3);
 freq_piek2 = sample(:,4);
 spanning_piek2 = sample(:,5);
 
@@ -15,9 +15,9 @@ omega = freq_piek2*2*pi;
 r = 4.3E-2; % 5.9 +- 0.5 + 1 cm? voor radius vd pijp waar die aan zit
 m_tot = massa + rust_massa;
 
-% kracht = omega.^2*r.*m_tot;
+kracht = omega.^2*r.*m_tot;
 a_z = r*omega.^2;
-% kracht = m_tot.*(a_z)
+kracht = m_tot.*(a_z)
 
 
 
