@@ -1,7 +1,7 @@
 sample = ['Accelerometer','Luchtdruk']
 sample_val = [1, 2];
-hoogte = [2.154, 2.1969811];
-onzekerheid = [0.2, 0.0000022];
+hoogte = [2.161, 2.1969811];
+onzekerheid = [0.3, 0.0000022];
 
 % labels & legend zelf aanpassen in createFit
 
@@ -15,7 +15,7 @@ legend('Gemeten \tau_0', 'Literatuurwaarde \tau_0', 'Interpreter', 'latex', 'Loc
 
 
 xlim([-1 3])
-ylim([1.9 2.4])
+% ylim([1.9 2.4])
 
 % Correcte significantie maken voor plot 1
 xtickformat('%.1f')
@@ -33,7 +33,7 @@ set(gca, 'YTickLabel', nieuw_y)
 %figure( 'Name', 'untitled fit 1', 'Location', 'NorthEast');
 
 % Label axes
-ylabel('Levensduur in rust [$\mu$s]', 'Interpreter', 'latex')
+ylabel('Levensduur in rust $\tau_0$ [$\mu$s]', 'Interpreter', 'latex')
 xlabel('Meting soort [-]', 'Interpreter', 'latex')
 grid on
 

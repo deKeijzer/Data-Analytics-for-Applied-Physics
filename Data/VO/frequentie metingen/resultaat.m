@@ -1,11 +1,11 @@
 sample = importdata('resultaat.txt');
 sample = sample.data;
 
-% meting = sample(:,1);
 meting = sample(:,1);
 aandrijf_spanning = sample(:,2);
 frequentie = sample(:,3);
 gemeten_spanning = sample(:,4);
+weights = sample(:,6);
 
 % Gegegevens voor bepalen gevoeligheid
 massa = 0.949802;
@@ -24,6 +24,11 @@ kracht_heen = kracht(1:11);
 kracht_terug = kracht(12:24);
 gemeten_spanning_heen = gemeten_spanning(1:11);
 gemeten_spanning_terug = gemeten_spanning(12:24);
+wieghts_heen = weights(1:11);
+wieghts_terug = weights(12:24);
+
+figure(1);clf % Geeft fig nmr en cleared hem daarna
+
 % fit_piek1(massa, spanning_piek1);
 
 % fit_heen(kracht_heen, gemeten_spanning_heen);
@@ -33,38 +38,43 @@ gemeten_spanning_terug = gemeten_spanning(12:24);
 
 %-----------------------------Start fit heen
 %% Fit: 'untitled fit 1'.
-[xData, yData] = prepareCurveData( kracht_heen, gemeten_spanning_heen );
+[xData, yData, weights] = prepareCurveData( kracht_heen, gemeten_spanning_heen, wieghts_heen );
 
 % Set up fittype and options.
-ft = fittype( 'poly3' );
+ft = fittype( 'poly1' );
+opts = fitoptions( 'Method', 'LinearLeastSquares' );
+opts.Weights = weights;
 
 % Fit model to data.
-[fitresult, gof] = fit( xData, yData, ft );
+[fitresult, gof] = fit( xData, yData, ft, opts );
 
 % Plot fit with data.
-h = plot( fitresult, xData, yData, 'v' );
+h1 = plot( fitresult, xData, yData ,'v');
 hold on
 %--------------------------------eind fit heen
 % -------------------------------Start fit terug
 %% Fit: 'untitled fit 1'.
-[xData, yData] = prepareCurveData( kracht_terug, gemeten_spanning_terug );
+[xData, yData, weights] = prepareCurveData( kracht_terug, gemeten_spanning_terug, wieghts_terug );
 
 % Set up fittype and options.
-ft = fittype( 'poly3' );
+ft = fittype( 'poly1' );
+opts = fitoptions( 'Method', 'LinearLeastSquares' );
+opts.Weights = weights;
 
 % Fit model to data.
-[fitresult2, gof] = fit( xData, yData, ft );
+[fitresult, gof] = fit( xData, yData, ft, opts );
 
 % Plot fit with data.
-h2 = plot( fitresult2, xData, yData, '^')
+h2 = plot(fitresult, xData, yData,'^');
 %--------------------------------eind fit terug
 hold on
 
+ylim([0 17E-4])
 % labels & legend zelf aanpassen in createFit
-legend_fit_laaghoog = 'Fit oplopend: ax^3+bx^2+cx+d      a=5,109\times10^{-3}     b=-1,493\times10^{-1}     c=1,452   d=-4,689    R^2=0,9971'
-legend_fit_hooglaag = 'Fit aflopend: ax^3+bx^2+cx+d      a=1,880\times10^{-2}     b=-5,713\times10^{-1}     c=5,786     d=-19,53   R^2=0,9790'
-legend('Meetwaarden oplopend', legend_fit_laaghoog, 'Meetwaarden aflopend',legend_fit_hooglaag, 'Interpreter', 'latex', 'Location' ,'NorthWest')
-% legend('Meetwaarden oplopend','Fit oplopend','Meetwaarden aflopend', 'Fit aflopend', 'Interpreter', 'latex', 'Location' ,'NorthWest')
+legend_fit_laaghoog = 'Fit oplopend: ax+b     a=3,294\times10^{-3}     b=-3,402\times10^{-2}     R^2=0,9973'
+legend_fit_hooglaag = 'Fit aflopend: ax+b      a=8,265\times10^{-3}     b=-8,581\times10^{-2}     R^2=0,9521'
+% legend('Meetwaarden oplopend', legend_fit_laaghoog, 'Meetwaarden aflopend',legend_fit_hooglaag, 'Interpreter', 'latex', 'Location' ,'NorthWest')
+legend('Meetwaarden oplopend','Fit oplopend','Meetwaarden aflopend', 'Fit aflopend', 'Interpreter', 'latex', 'Location' ,'NorthWest')
 
 % xlim([0 0.7])
 % Correcte significantie maken voor plot 1
